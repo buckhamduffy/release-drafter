@@ -19612,7 +19612,7 @@ exports.getNextRelease = async () => {
 }
 
 exports.generateChangelog = async (from, to) => {
-    let changelog = ''
+    let changelog = 'test'
 
     try {
         await exec.exec(
@@ -19624,7 +19624,7 @@ exports.generateChangelog = async (from, to) => {
             {
                 listeners: {
                     stdout: (data) => {
-                        changelog = data.toString()
+                        changelog += data.toString()
                     },
                     stderr: (data) => {
                         core.debug(data.toString())
