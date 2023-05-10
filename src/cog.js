@@ -45,7 +45,7 @@ exports.getNextRelease = async () => {
 }
 
 exports.generateChangelog = async (from, to) => {
-    let changelog = 'test'
+    let changelog = ''
 
     try {
         await exec.exec(
