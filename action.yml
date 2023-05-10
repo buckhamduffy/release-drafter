@@ -1,0 +1,5 @@
+name: 'Release Drafter'
+description: 'Drafts a Release'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
