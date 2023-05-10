@@ -10,8 +10,9 @@ exports.installCog = async () => {
     await exec.exec('mkdir', ['-p', bin_dir])
 
     core.debug("Downloading cog");
-    await exec.exec('wget', [
-        '-O',
+    await exec.exec('curl', [
+        '-L',
+        '-o',
         'cog.tar.gz',
         `https://github.com/cocogitto/cocogitto/releases/download/${version}/${tar}`
     ])
