@@ -5,7 +5,7 @@ const {installCog, getNextRelease, generateChangelog} = require("./cog");
 
 // most @actions toolkit packages have async methods
 async function run() {
-    installCog();
+    await installCog();
 
     const latestRelease = await getLatestRelease()
     const nextRelease = await getNextRelease()

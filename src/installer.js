@@ -1,16 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 const tar = require('tar');
-const httpm = require('@actions/http-client')
-const http = require("http");
+const core = require('@actions/core');
 
 exports.downloadAndExtract = async (url, targetDir) => {
     if (!fs.existsSync(targetDir)) {
-        fs.mkdirSync(targetDir);
+        fs.mkdirSync(targetDir, {recursive: true});
     }
 
+    core.debug("Downloading cog")
     await downloadFile(url, path.join(targetDir, 'file.tar.gz'));
 
+    core.debug("Extracting cog")
     await extractFile(
         path.join(targetDir, 'file.tar.gz'),
         targetDir
@@ -18,37 +19,27 @@ exports.downloadAndExtract = async (url, targetDir) => {
 }
 
 const extractFile = async (inputPath, targetDir) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            await tar.x({
-                file: inputPath,
-                cwd: targetDir,
-            });
-
-            resolve();
-        } catch (error) {
-            reject(error);
-        }
+    await tar.x({
+        file: inputPath,
+        cwd: targetDir,
     });
 }
 
 const downloadFile = async (url, outputPath) => {
-    return new Promise((resolve, reject) => {
-        const file = fs.createWriteStream(outputPath);
+    if (fs.existsSync(outputPath)) {
+        fs.rmSync(outputPath)
+    }
 
-        const client = new httpm.HttpClient()
+    const fetch = (await import('node-fetch')).default;
 
-        client.get(url, (response) => {
-            if (response.statusCode !== 200) {
-                reject(new Error(`Request failed with status code ${response.statusCode}`));
-                return;
-            }
+    const body = await fetch(url)
+        .then((x) => x.buffer())
+        .catch((err) => {
+            core.setFailed(`Fail to download file ${url}: ${err}`);
+            return undefined;
+        });
 
-            response.pipe(file);
+    if (body === undefined) return;
 
-            file.on('finish', () => {
-                file.close(resolve);
-            });
-        })
-    });
+    await fs.writeFileSync(outputPath, body)
 }
