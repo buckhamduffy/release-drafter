@@ -1,27 +1,18 @@
-const fs = require('fs');
 const exec = require('@actions/exec');
 const core = require('@actions/core');
+const fs = require('fs');
+const https = require('https');
+const {downloadAndExtract} = require("./installer");
 
 const version = '5.3.1'
 const tar = `cocogitto-${version}-x86_64-unknown-linux-musl.tar.gz`
 const bin_dir = `${process.env.HOME}/.local/bin`
 
 exports.installCog = async () => {
-    await exec.exec('mkdir', ['-p', bin_dir])
-
-    core.debug("Downloading cog");
-    await exec.exec('curl', [
-        '-L',
-        '-o',
-        'cog.tar.gz',
-        `https://github.com/cocogitto/cocogitto/releases/download/${version}/${tar}`
-    ])
-
-    core.debug("Extracting cog");
-    await exec.exec('tar', ['xfz', 'cog.tar.gz'])
-
-    core.debug("Moving cog to bin");
-    await exec.exec('mv', ['cog', `${bin_dir}/cog`])
+    await downloadAndExtract(
+        `https://github.com/cocogitto/cocogitto/releases/download/${version}/${tar}`,
+        bin_dir
+    )
 
     core.addPath(bin_dir)
 }
@@ -62,3 +53,4 @@ exports.generateChangelog = async (from, to) => {
 
     return changelog
 }
+
