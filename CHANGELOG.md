@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.0.8 - 2023-05-10
+#### Bug Fixes
+- fix getting changelog - (475397e) - Aaron Florey
+
+- - -
+
 ## v1.0.7 - 2023-05-10
 #### Bug Fixes
 - fix finding draft release - (99407e6) - Aaron Florey
