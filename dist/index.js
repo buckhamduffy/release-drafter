@@ -19493,7 +19493,7 @@ exports.getLatestRelease = async () => {
         repo,
     });
 
-    return res.tag_name
+    return res.data.tag_name
 }
 
 exports.getOrCreateDraftRelease = async (releaseName, changelog) => {
@@ -19547,7 +19547,7 @@ const findDraftRelease = async () => {
     const releases = await octokit.rest.repos.listReleases({
         owner,
         repo,
-    })
+    }).data
 
     return releases.find((release) => {
         return release.draft === true
@@ -19604,19 +19604,22 @@ exports.getNextRelease = async () => {
 }
 
 exports.generateChangelog = async (from, to) => {
+    let changelog = ''
+
     await exec.exec(
         `${bin_dir}/cog`,
         [
             'changelog',
             from + '..' + to,
-            '>',
-            'changelog.tmp'
-        ]
+        ],
+        {
+            listeners: {
+                stdout: (data) => {
+                    changelog = data.toString()
+                }
+            }
+        },
     )
-
-    const changelog = fs.readFileSync('changelog.tmp', 'utf8')
-
-    fs.rmSync('changelog.tmp')
 
     return changelog
 }
@@ -19829,7 +19832,7 @@ const {installCog, getNextRelease, generateChangelog} = __nccwpck_require__(9248
 async function run() {
     await installCog();
 
-    const latestRelease = await getLatestRelease()
+    const latestRelease = await getLatestRelease() || 'master'
     const nextRelease = await getNextRelease()
 
     core.debug("Latest release: " + latestRelease)

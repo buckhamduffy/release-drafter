@@ -37,19 +37,22 @@ exports.getNextRelease = async () => {
 }
 
 exports.generateChangelog = async (from, to) => {
+    let changelog = ''
+
     await exec.exec(
         `${bin_dir}/cog`,
         [
             'changelog',
             from + '..' + to,
-            '>',
-            'changelog.tmp'
-        ]
+        ],
+        {
+            listeners: {
+                stdout: (data) => {
+                    changelog = data.toString()
+                }
+            }
+        },
     )
-
-    const changelog = fs.readFileSync('changelog.tmp', 'utf8')
-
-    fs.rmSync('changelog.tmp')
 
     return changelog
 }

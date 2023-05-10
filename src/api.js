@@ -18,7 +18,7 @@ exports.getLatestRelease = async () => {
         repo,
     });
 
-    return res.tag_name
+    return res.data.tag_name
 }
 
 exports.getOrCreateDraftRelease = async (releaseName, changelog) => {
@@ -72,7 +72,7 @@ const findDraftRelease = async () => {
     const releases = await octokit.rest.repos.listReleases({
         owner,
         repo,
-    })
+    }).data
 
     return releases.find((release) => {
         return release.draft === true

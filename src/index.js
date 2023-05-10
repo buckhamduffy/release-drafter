@@ -7,7 +7,7 @@ const {installCog, getNextRelease, generateChangelog} = require("./cog");
 async function run() {
     await installCog();
 
-    const latestRelease = await getLatestRelease()
+    const latestRelease = await getLatestRelease() || 'master'
     const nextRelease = await getNextRelease()
 
     core.debug("Latest release: " + latestRelease)
