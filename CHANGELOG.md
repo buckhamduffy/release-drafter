@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.0.6 - 2023-05-10
+#### Bug Fixes
+- pull changleog from stdout, fix getting latest release - (3153dde) - Aaron Florey
+
+- - -
+
 ## v1.0.5 - 2023-05-10
 #### Bug Fixes
 - improve download cog code to node-fetch - (e795b34) - Aaron Florey
