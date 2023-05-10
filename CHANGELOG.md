@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.0.7 - 2023-05-10
+#### Bug Fixes
+- fix finding draft release - (99407e6) - Aaron Florey
+
+- - -
+
 ## v1.0.6 - 2023-05-10
 #### Bug Fixes
 - pull changleog from stdout, fix getting latest release - (3153dde) - Aaron Florey
