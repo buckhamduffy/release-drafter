@@ -80,6 +80,6 @@ const findDraftRelease = async () => {
 }
 
 const getOctokit = () => {
-    const token = core.getInput('token') || process.env.GITHUB_TOKEN;
+    const token = process.env.GITHUB_TOKEN;
     return github.getOctokit(token);
 }
