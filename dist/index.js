@@ -19567,36 +19567,44 @@ const getOctokit = () => {
 
 const exec = __nccwpck_require__(1514);
 const core = __nccwpck_require__(2186);
-const fs = __nccwpck_require__(7147);
-const https = __nccwpck_require__(5687);
 const {downloadAndExtract} = __nccwpck_require__(5911);
+const {c} = __nccwpck_require__(4674);
 
 const version = '5.3.1'
 const tar = `cocogitto-${version}-x86_64-unknown-linux-musl.tar.gz`
 const bin_dir = `${process.env.HOME}/.local/bin`
 
 exports.installCog = async () => {
-    await downloadAndExtract(
-        `https://github.com/cocogitto/cocogitto/releases/download/${version}/${tar}`,
-        bin_dir
-    )
+    try {
+        await downloadAndExtract(
+            `https://github.com/cocogitto/cocogitto/releases/download/${version}/${tar}`,
+            bin_dir
+        )
+    } catch (e) {
+        core.setFailed(e.message)
+    }
 
     core.addPath(bin_dir)
 }
 
 exports.getNextRelease = async () => {
     let release = ''
-    await exec.exec(
-        `${bin_dir}/cog`,
-        ['bump', '--dry-run', '--auto'],
-        {
-            listeners: {
-                stdout: (data) => {
-                    release = data.toString()
+
+    try {
+        await exec.exec(
+            `${bin_dir}/cog`,
+            ['bump', '--dry-run', '--auto'],
+            {
+                listeners: {
+                    stdout: (data) => {
+                        release = data.toString()
+                    }
                 }
             }
-        }
-    )
+        )
+    } catch (e) {
+        core.setFailed(e.message)
+    }
 
     core.debug("new release output: " + release)
 
@@ -19606,20 +19614,27 @@ exports.getNextRelease = async () => {
 exports.generateChangelog = async (from, to) => {
     let changelog = ''
 
-    await exec.exec(
-        `${bin_dir}/cog`,
-        [
-            'changelog',
-            from + '..' + to,
-        ],
-        {
-            listeners: {
-                stdout: (data) => {
-                    changelog = data.toString()
+    try {
+        await exec.exec(
+            `${bin_dir}/cog`,
+            [
+                'changelog',
+                from + '..' + to,
+            ],
+            {
+                listeners: {
+                    stdout: (data) => {
+                        changelog = data.toString()
+                    },
+                    stderr: (data) => {
+                        core.debug(data.toString())
+                    }
                 }
             }
-        },
-    )
+        )
+    } catch (e) {
+        core.setFailed(e.message)
+    }
 
     return changelog
 }
