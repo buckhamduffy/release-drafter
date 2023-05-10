@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.0.4 - 2023-05-10
+#### Bug Fixes
+- improve download cog code with @actions/http - (b945fce) - Aaron Florey
+
+- - -
+
 ## v1.0.3 - 2023-05-10
 #### Bug Fixes
 - improve download cog code - (bdf93f6) - Aaron Florey
