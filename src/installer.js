@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const tar = require('tar');
-const https = require("https");
+const httpm = require('@actions/http-client')
+const http = require("http");
 
 exports.downloadAndExtract = async (url, targetDir) => {
     if (!fs.existsSync(targetDir)) {
@@ -35,17 +36,19 @@ const downloadFile = async (url, outputPath) => {
     return new Promise((resolve, reject) => {
         const file = fs.createWriteStream(outputPath);
 
-        https
-            .get(url, (response) => {
-                response.pipe(file);
-                file.on('finish', () => {
-                    file.close(resolve);
-                });
-            })
-            .on('error', (error) => {
-                fs.unlink(outputPath, () => {
-                });
-                reject(error);
+        const client = new httpm.HttpClient()
+
+        client.get(url, (response) => {
+            if (response.statusCode !== 200) {
+                reject(new Error(`Request failed with status code ${response.statusCode}`));
+                return;
+            }
+
+            response.pipe(file);
+
+            file.on('finish', () => {
+                file.close(resolve);
             });
+        })
     });
 }

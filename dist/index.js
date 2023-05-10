@@ -19527,7 +19527,8 @@ exports.generateChangelog = async (from, to) => {
 const fs = __nccwpck_require__(7147);
 const path = __nccwpck_require__(1017);
 const tar = __nccwpck_require__(4674);
-const https = __nccwpck_require__(5687);
+const httpm = __nccwpck_require__(6255)
+const http = __nccwpck_require__(3685);
 
 exports.downloadAndExtract = async (url, targetDir) => {
     if (!fs.existsSync(targetDir)) {
@@ -19561,18 +19562,20 @@ const downloadFile = async (url, outputPath) => {
     return new Promise((resolve, reject) => {
         const file = fs.createWriteStream(outputPath);
 
-        https
-            .get(url, (response) => {
-                response.pipe(file);
-                file.on('finish', () => {
-                    file.close(resolve);
-                });
-            })
-            .on('error', (error) => {
-                fs.unlink(outputPath, () => {
-                });
-                reject(error);
+        const client = new httpm.HttpClient()
+
+        client.get(url, (response) => {
+            if (response.statusCode !== 200) {
+                reject(new Error(`Request failed with status code ${response.statusCode}`));
+                return;
+            }
+
+            response.pipe(file);
+
+            file.on('finish', () => {
+                file.close(resolve);
             });
+        })
     });
 }
 
