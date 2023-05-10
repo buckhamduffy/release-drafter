@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.0.2 - 2023-05-10
+#### Bug Fixes
+- use curl to download the file - (faf336c) - Aaron Florey
+
+- - -
+
 ## v1.0.1 - 2023-05-10
 #### Bug Fixes
 - just pull the token from env - (53e4816) - Aaron Florey
