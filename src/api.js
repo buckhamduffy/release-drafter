@@ -72,9 +72,9 @@ const findDraftRelease = async () => {
     const releases = await octokit.rest.repos.listReleases({
         owner,
         repo,
-    }).data
+    })
 
-    return releases.find((release) => {
+    return releases.data.find((release) => {
         return release.draft === true
     })
 }
