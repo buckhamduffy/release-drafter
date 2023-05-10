@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.0.5 - 2023-05-10
+#### Bug Fixes
+- improve download cog code to node-fetch - (e795b34) - Aaron Florey
+
+- - -
+
 ## v1.0.4 - 2023-05-10
 #### Bug Fixes
 - improve download cog code with @actions/http - (b945fce) - Aaron Florey
