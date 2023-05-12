@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.1.0 - 2023-05-12
+#### Chore
+- generate ncc - (2c4f0c0) - Aaron Florey
+#### Features
+- add workflow for releasing from master - (8b71c69) - Aaron Florey
+
+- - -
+
 ## v1.0.10 - 2023-05-10
 #### Bug Fixes
 - fix getting changelog - (1110f57) - Aaron Florey
