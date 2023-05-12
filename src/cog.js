@@ -31,7 +31,7 @@ const getNextRelease = async () => {
 
     release = result.stdout.trim()
 
-    if (!/^v\.(\d+\.\d+\.\d+)$/.test(release)) {
+    if (!/^v(\d+\.\d+\.\d+)$/.test(release)) {
       throw new Error('Invalid release version: ' + release)
     }
   } catch (e) {
