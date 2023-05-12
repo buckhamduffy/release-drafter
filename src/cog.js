@@ -1,74 +1,108 @@
-const exec = require('@actions/exec');
-const core = require('@actions/core');
-const {downloadAndExtract} = require("./installer");
-const {c} = require("tar");
+const exec = require('@actions/exec')
+const core = require('@actions/core')
+const { downloadAndExtract } = require('./installer')
 
 const version = '5.3.1'
 const tar = `cocogitto-${version}-x86_64-unknown-linux-musl.tar.gz`
-const bin_dir = `${process.env.HOME}/.local/bin`
+const binDir = `${process.env.HOME}/.local/bin`
 
-exports.installCog = async () => {
-    try {
-        await downloadAndExtract(
+const installCog = async () => {
+  try {
+    await downloadAndExtract(
             `https://github.com/cocogitto/cocogitto/releases/download/${version}/${tar}`,
-            bin_dir
-        )
-    } catch (e) {
-        core.setFailed(e.message)
-    }
+            binDir
+    )
+  } catch (e) {
+    core.setFailed(e.message)
+    process.exit(1)
+  }
 
-    core.addPath(bin_dir)
+  core.addPath(binDir)
 }
 
-exports.getNextRelease = async () => {
-    let release = ''
+const getNextRelease = async () => {
+  let release = ''
 
-    try {
-        await exec.exec(
-            `${bin_dir}/cog`,
-            ['bump', '--dry-run', '--auto'],
-            {
-                listeners: {
-                    stdout: (data) => {
-                        release = data.toString()
-                    }
-                }
-            }
-        )
-    } catch (e) {
-        core.setFailed(e.message)
+  try {
+    const result = await exec.getExecOutput(
+      'cog',
+      ['bump', '--dry-run', '--auto']
+    )
+
+    release = result.stdout.trim()
+
+    if (!/^v\.(\d+\.\d+\.\d+)$/.test(release)) {
+      throw new Error('Invalid release version: ' + release)
     }
+  } catch (e) {
+    core.setFailed(e.message)
+    process.exit(1)
+  }
 
-    core.debug("new release output: " + release)
+  core.debug('new release output: ' + release)
 
-    return release
+  return release
 }
 
-exports.generateChangelog = async (from, to) => {
-    let changelog = ''
+const generateChangelogBetween = async (from, to) => {
+  let changelog = ''
 
-    try {
-        await exec.exec(
-            `${bin_dir}/cog`,
-            [
-                'changelog',
-                from + '..' + to,
-            ],
-            {
-                listeners: {
-                    stdout: (data) => {
-                        changelog += data.toString()
-                    },
-                    stderr: (data) => {
-                        core.debug(data.toString())
-                    }
-                }
-            }
-        )
-    } catch (e) {
-        core.setFailed(e.message)
-    }
+  try {
+    const result = await exec.getExecOutput(
+      'cog',
+      [
+        'changelog',
+        from + '..' + to
+      ])
 
-    return changelog
+    changelog = result.stdout.trim()
+  } catch (e) {
+    core.setFailed(e.message)
+    process.exit(1)
+  }
+
+  return changelog
 }
 
+const generateChangelogAt = async (version) => {
+  let changelog = ''
+
+  try {
+    const result = await exec.getExecOutput(
+      'cog',
+      [
+        'changelog',
+        '--at',
+        version
+      ])
+
+    changelog = result.stdout.trim()
+  } catch (e) {
+    core.setFailed(e.message)
+    process.exit(1)
+  }
+
+  return changelog
+}
+
+const bumpRelease = async () => {
+  const version = getNextRelease()
+
+  try {
+    await exec.exec(
+      'cog',
+      ['bump', '--auto']
+    )
+  } catch (e) {
+    core.setFailed(e.message)
+    process.exit(1)
+  }
+
+  return version
+}
+
+exports.installCog = installCog
+exports.getNextRelease = getNextRelease
+exports.generateChangelogBetween = generateChangelogBetween
+exports.bumpRelease = bumpRelease
+exports.generateChangelogAt = generateChangelogAt

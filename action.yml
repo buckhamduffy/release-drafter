@@ -3,3 +3,18 @@ description: 'Drafts a Release'
 runs:
   using: 'node16'
   main: 'dist/index.js'
+inputs:
+  master_branch:
+    description: 'The name of the master branch'
+    required: false
+    default: 'master'
+  staging_branch:
+    description: 'The name of the staging branch'
+    required: false
+    default: 'staging'
+  token:
+    description: 'The GitHub token to use for creating a release'
+    required: false
+outputs:
+  version:
+    description: 'The version of the release'
