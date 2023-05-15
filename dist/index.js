@@ -29920,11 +29920,12 @@ const setupGitUser = async () => {
   await exec.exec('git', ['config', '--global', 'user.name', 'github-actions'])
 }
 
-const pushWithTags = async () => {
+const pushWithTags = async (branch) => {
   await setupGitUser()
 
   core.debug('Pushing branch with tags')
   await exec.exec('git', ['push', '--tags'])
+  await exec.exec('git', ['push', 'origin', branch])
 }
 
 exports.setupGitUser = setupGitUser
@@ -30189,7 +30190,7 @@ async function generateActualRelease () {
 
   await setupGitUser()
   const version = await bumpRelease()
-  await pushWithTags()
+  await pushWithTags(masterBranch)
   const changelog = await generateChangelogAt(version)
 
   core.setOutput('version', version)

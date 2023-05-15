@@ -46,7 +46,7 @@ async function generateActualRelease () {
 
   await setupGitUser()
   const version = await bumpRelease()
-  await pushWithTags()
+  await pushWithTags(masterBranch)
   const changelog = await generateChangelogAt(version)
 
   core.setOutput('version', version)
