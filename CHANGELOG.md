@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.1.2 - 2023-05-15
+#### Bug Fixes
+- push master branch along with tags - (10ff98a) - Aaron Florey
+
+- - -
+
 ## v1.1.1 - 2023-05-12
 #### Bug Fixes
 - incorrect version check regex - (6492d98) - Aaron Florey
