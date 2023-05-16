@@ -30170,14 +30170,12 @@ async function run () {
 }
 
 async function generateDraftRelease () {
-  const latestRelease = await getLatestRelease() || 'master'
   const nextRelease = await getNextRelease()
 
   core.setOutput('version', nextRelease)
-  core.debug('Latest release: ' + latestRelease)
   core.debug('Next release: ' + nextRelease)
 
-  const changelog = await generateChangelogBetween(latestRelease, 'HEAD')
+  const changelog = await generateChangelogBetween(masterBranch, 'HEAD')
 
   core.debug('Upserting draft release')
   await getOrCreateDraftRelease(nextRelease, changelog)
