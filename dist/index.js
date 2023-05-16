@@ -30183,8 +30183,9 @@ async function generateDraftRelease () {
 
 async function generateActualRelease () {
   const history = await commitlintRead({ from: 'HEAD~1', to: 'HEAD' })
-  const re = new RegExp('Merge pull request #\\d+ from \\w+\\/' + stagingBranch)
-  const isStagingMerge = re.test(history[0])
+  const prRe = new RegExp('Merge pull request #\\d+ from \\w+\\/' + stagingBranch)
+  const mergeRe = new RegExp('Merge branch \'' + stagingBranch + '\'')
+  const isStagingMerge = prRe.test(history[0]) || mergeRe.test(history[0])
 
   await setupGitUser()
   const version = await bumpRelease()
