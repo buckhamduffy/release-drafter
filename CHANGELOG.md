@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.2.0 - 2023-05-16
+#### Features
+- run changelog against master branch instead of latest tag - (303dc83) - Aaron Florey
+
+- - -
+
 ## v1.1.2 - 2023-05-15
 #### Bug Fixes
 - push master branch along with tags - (10ff98a) - Aaron Florey
