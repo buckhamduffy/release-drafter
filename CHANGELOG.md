@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.2.1 - 2023-05-16
+#### Bug Fixes
+- allow manual merging to trigger release update - (1a57f35) - Aaron Florey
+
+- - -
+
 ## v1.2.0 - 2023-05-16
 #### Features
 - run changelog against master branch instead of latest tag - (303dc83) - Aaron Florey
