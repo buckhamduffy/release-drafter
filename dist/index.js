@@ -30178,7 +30178,6 @@ async function run () {
 
 async function generateDraftRelease () {
   await ensureBranchFetched(masterBranch)
-  await ensureBranchFetched(stagingBranch)
 
   const nextRelease = await getNextRelease()
 
