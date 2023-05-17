@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.2.3 - 2023-05-17
+#### Bug Fixes
+- dont fetch staging since were already in staging - (d3776df) - Aaron Florey
+
+- - -
+
 ## v1.2.2 - 2023-05-17
 #### Bug Fixes
 - fetch master branch so we can compare changelogs - (6fc06bc) - Aaron Florey
