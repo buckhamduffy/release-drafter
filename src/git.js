@@ -17,5 +17,10 @@ const pushWithTags = async (branch) => {
   await exec.exec('git', ['push', 'origin', branch])
 }
 
+const ensureBranchFetched = async (branch) => {
+  await exec.exec('git', ['fetch', 'origin', branch + ':' + branch])
+}
+
 exports.setupGitUser = setupGitUser
 exports.pushWithTags = pushWithTags
+exports.ensureBranchFetched = ensureBranchFetched

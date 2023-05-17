@@ -29928,8 +29928,13 @@ const pushWithTags = async (branch) => {
   await exec.exec('git', ['push', 'origin', branch])
 }
 
+const ensureBranchFetched = async (branch) => {
+  await exec.exec('git', ['fetch', 'origin', branch + ':' + branch])
+}
+
 exports.setupGitUser = setupGitUser
 exports.pushWithTags = pushWithTags
+exports.ensureBranchFetched = ensureBranchFetched
 
 
 /***/ }),
@@ -30145,11 +30150,13 @@ var __webpack_exports__ = {};
 const github = __nccwpck_require__(5438)
 const core = __nccwpck_require__(2186)
 const {
-  getLatestRelease, getOrCreateDraftRelease, findDraftRelease,
-  updateDraftReleaseToActualRelease, createActualRelease
+  getOrCreateDraftRelease,
+  findDraftRelease,
+  updateDraftReleaseToActualRelease,
+  createActualRelease
 } = __nccwpck_require__(1695)
 const { installCog, getNextRelease, generateChangelogBetween, bumpRelease, generateChangelogAt } = __nccwpck_require__(9248)
-const { setupGitUser, pushWithTags } = __nccwpck_require__(3892)
+const { setupGitUser, pushWithTags, ensureBranchFetched } = __nccwpck_require__(3892)
 const commitlintRead = (__nccwpck_require__(8439)["default"])
 
 const currentBranch = github.context.ref?.replace('refs/heads/', '') || 'staging'
@@ -30170,6 +30177,9 @@ async function run () {
 }
 
 async function generateDraftRelease () {
+  await ensureBranchFetched(masterBranch)
+  await ensureBranchFetched(stagingBranch)
+
   const nextRelease = await getNextRelease()
 
   core.setOutput('version', nextRelease)

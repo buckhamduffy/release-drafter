@@ -1,11 +1,13 @@
 const github = require('@actions/github')
 const core = require('@actions/core')
 const {
-  getLatestRelease, getOrCreateDraftRelease, findDraftRelease,
-  updateDraftReleaseToActualRelease, createActualRelease
+  getOrCreateDraftRelease,
+  findDraftRelease,
+  updateDraftReleaseToActualRelease,
+  createActualRelease
 } = require('./api')
 const { installCog, getNextRelease, generateChangelogBetween, bumpRelease, generateChangelogAt } = require('./cog')
-const { setupGitUser, pushWithTags } = require('./git')
+const { setupGitUser, pushWithTags, ensureBranchFetched } = require('./git')
 const commitlintRead = require('@commitlint/read').default
 
 const currentBranch = github.context.ref?.replace('refs/heads/', '') || 'staging'
@@ -26,6 +28,9 @@ async function run () {
 }
 
 async function generateDraftRelease () {
+  await ensureBranchFetched(masterBranch)
+  await ensureBranchFetched(stagingBranch)
+
   const nextRelease = await getNextRelease()
 
   core.setOutput('version', nextRelease)
