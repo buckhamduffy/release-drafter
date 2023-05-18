@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.2.4 - 2023-05-18
+#### Bug Fixes
+- rebase staging before attempting to generate a changelog - (a924cf4) - Aaron Florey
+
+- - -
+
 ## v1.2.3 - 2023-05-17
 #### Bug Fixes
 - dont fetch staging since were already in staging - (d3776df) - Aaron Florey
