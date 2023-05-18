@@ -29933,6 +29933,8 @@ const ensureBranchFetched = async (branch) => {
 }
 
 const rebase = async (branch) => {
+  await setupGitUser()
+
   await exec.exec('git', ['rebase', '-Xtheirs', 'origin/' + branch])
 }
 
