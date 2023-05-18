@@ -29932,9 +29932,14 @@ const ensureBranchFetched = async (branch) => {
   await exec.exec('git', ['fetch', 'origin', branch + ':' + branch])
 }
 
+const rebase = async (branch) => {
+  await exec.exec('git', ['rebase', '-Xtheirs', 'origin/' + branch])
+}
+
 exports.setupGitUser = setupGitUser
 exports.pushWithTags = pushWithTags
 exports.ensureBranchFetched = ensureBranchFetched
+exports.rebase = rebase
 
 
 /***/ }),
@@ -30153,10 +30158,10 @@ const {
   getOrCreateDraftRelease,
   findDraftRelease,
   updateDraftReleaseToActualRelease,
-  createActualRelease
+  createActualRelease, getLatestRelease
 } = __nccwpck_require__(1695)
 const { installCog, getNextRelease, generateChangelogBetween, bumpRelease, generateChangelogAt } = __nccwpck_require__(9248)
-const { setupGitUser, pushWithTags, ensureBranchFetched } = __nccwpck_require__(3892)
+const { setupGitUser, pushWithTags, ensureBranchFetched, rebase } = __nccwpck_require__(3892)
 const commitlintRead = (__nccwpck_require__(8439)["default"])
 
 const currentBranch = github.context.ref?.replace('refs/heads/', '') || 'staging'
@@ -30178,13 +30183,16 @@ async function run () {
 
 async function generateDraftRelease () {
   await ensureBranchFetched(masterBranch)
+  await rebase(masterBranch)
 
+  const latestRelease = await getLatestRelease()
   const nextRelease = await getNextRelease()
 
   core.setOutput('version', nextRelease)
   core.debug('Next release: ' + nextRelease)
+  core.debug('Last release: ' + latestRelease)
 
-  const changelog = await generateChangelogBetween(masterBranch, 'HEAD')
+  const changelog = await generateChangelogBetween(latestRelease, 'HEAD')
 
   core.debug('Upserting draft release')
   await getOrCreateDraftRelease(nextRelease, changelog)

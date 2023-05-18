@@ -4,10 +4,10 @@ const {
   getOrCreateDraftRelease,
   findDraftRelease,
   updateDraftReleaseToActualRelease,
-  createActualRelease
+  createActualRelease, getLatestRelease
 } = require('./api')
 const { installCog, getNextRelease, generateChangelogBetween, bumpRelease, generateChangelogAt } = require('./cog')
-const { setupGitUser, pushWithTags, ensureBranchFetched } = require('./git')
+const { setupGitUser, pushWithTags, ensureBranchFetched, rebase } = require('./git')
 const commitlintRead = require('@commitlint/read').default
 
 const currentBranch = github.context.ref?.replace('refs/heads/', '') || 'staging'
@@ -29,13 +29,16 @@ async function run () {
 
 async function generateDraftRelease () {
   await ensureBranchFetched(masterBranch)
+  await rebase(masterBranch)
 
+  const latestRelease = await getLatestRelease()
   const nextRelease = await getNextRelease()
 
   core.setOutput('version', nextRelease)
   core.debug('Next release: ' + nextRelease)
+  core.debug('Last release: ' + latestRelease)
 
-  const changelog = await generateChangelogBetween(masterBranch, 'HEAD')
+  const changelog = await generateChangelogBetween(latestRelease, 'HEAD')
 
   core.debug('Upserting draft release')
   await getOrCreateDraftRelease(nextRelease, changelog)

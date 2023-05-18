@@ -21,6 +21,11 @@ const ensureBranchFetched = async (branch) => {
   await exec.exec('git', ['fetch', 'origin', branch + ':' + branch])
 }
 
+const rebase = async (branch) => {
+  await exec.exec('git', ['rebase', '-Xtheirs', 'origin/' + branch])
+}
+
 exports.setupGitUser = setupGitUser
 exports.pushWithTags = pushWithTags
 exports.ensureBranchFetched = ensureBranchFetched
+exports.rebase = rebase
