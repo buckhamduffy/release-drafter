@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.3.1 - 2023-05-19
+#### Bug Fixes
+- make sure to checkout the branch before rebasing - (f1b7f79) - Aaron Florey
+
+- - -
+
 ## v1.3.0 - 2023-05-19
 #### Features
 - add a rebase action - (bdfd9fd) - Aaron Florey
