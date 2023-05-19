@@ -7,29 +7,44 @@ const {
   createActualRelease, getLatestRelease
 } = require('./api')
 const { installCog, getNextRelease, generateChangelogBetween, bumpRelease, generateChangelogAt } = require('./cog')
-const { setupGitUser, pushWithTags, ensureBranchFetched, rebase } = require('./git')
+const { Git } = require('./git')
 const commitlintRead = require('@commitlint/read').default
 
 const currentBranch = github.context.ref?.replace('refs/heads/', '') || 'staging'
 const masterBranch = core.getInput('master_branch') || 'master'
 const stagingBranch = core.getInput('staging_branch') || 'staging'
+const action = core.getInput('action') || 'release'
 
 async function run () {
   await installCog()
 
   if (currentBranch === masterBranch) {
     await generateActualRelease()
-  } else if (currentBranch === stagingBranch) {
-    await generateDraftRelease()
-  } else {
-    core.setFailed(`This action can only be run on the ${masterBranch} or ${stagingBranch} branch, but this is ${currentBranch}`)
-    process.exit(1)
+
+    return
   }
+
+  if (currentBranch === stagingBranch) {
+    switch (action) {
+      case 'rebase':
+        await rebaseStagingOntoMaster()
+        break
+      case 'release':
+      default:
+        await generateDraftRelease()
+        break
+    }
+
+    return
+  }
+
+  core.setFailed(`This action can only be run on the ${masterBranch} or ${stagingBranch} branch, but this is ${currentBranch}`)
+  process.exit(1)
 }
 
 async function generateDraftRelease () {
-  await ensureBranchFetched(masterBranch)
-  await rebase(masterBranch)
+  await Git.ensureBranchFetched(masterBranch)
+  await Git.rebaseOntoBranch(masterBranch)
 
   const latestRelease = await getLatestRelease()
   const nextRelease = await getNextRelease()
@@ -50,9 +65,8 @@ async function generateActualRelease () {
   const mergeRe = new RegExp('Merge branch \'' + stagingBranch + '\'')
   const isStagingMerge = prRe.test(history[0]) || mergeRe.test(history[0])
 
-  await setupGitUser()
   const version = await bumpRelease()
-  await pushWithTags(masterBranch)
+  await Git.pushWithTags(masterBranch)
   const changelog = await generateChangelogAt(version)
 
   core.setOutput('version', version)
@@ -67,6 +81,11 @@ async function generateActualRelease () {
   }
 
   await createActualRelease(version, changelog)
+}
+
+const rebaseStagingOntoMaster = async () => {
+  await Git.rebaseOntoBranch(masterBranch)
+  await Git.pushWithTags(stagingBranch)
 }
 
 run()

@@ -15,6 +15,9 @@ inputs:
   token:
     description: 'The GitHub token to use for creating a release'
     required: false
+  action:
+    description: 'The action to perform'
+    default: release
 outputs:
   version:
     description: 'The version of the release'
