@@ -65,6 +65,8 @@ async function generateDraftRelease () {
 }
 
 async function generateActualRelease () {
+  await Git.setupGitUser()
+
   const history = await commitlintRead({ from: 'HEAD~1', to: 'HEAD' })
   const prRe = new RegExp('Merge pull request #\\d+ from \\w+\\/' + stagingBranch)
   const mergeRe = new RegExp('Merge branch \'' + stagingBranch + '\'')
