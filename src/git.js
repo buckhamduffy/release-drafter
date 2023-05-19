@@ -36,6 +36,12 @@ class Git {
 
     await exec.exec('git', ['rebase', '-Xtheirs', 'origin/' + branch])
   }
+
+  async checkoutBranch (stagingBranch) {
+    await this.setupGitUser()
+
+    await exec.exec('git', ['checkout', '-b', stagingBranch, 'origin/' + stagingBranch])
+  }
 }
 
 exports.Git = new Git()

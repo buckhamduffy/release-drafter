@@ -19,16 +19,21 @@ async function run () {
   await installCog()
 
   if (currentBranch === masterBranch) {
-    await generateActualRelease()
+    switch (action) {
+      case 'rebase':
+        await rebaseStagingOntoMaster()
+        break
+      case 'release':
+      default:
+        await generateActualRelease()
+        break
+    }
 
     return
   }
 
   if (currentBranch === stagingBranch) {
     switch (action) {
-      case 'rebase':
-        await rebaseStagingOntoMaster()
-        break
       case 'release':
       default:
         await generateDraftRelease()
@@ -84,6 +89,7 @@ async function generateActualRelease () {
 }
 
 const rebaseStagingOntoMaster = async () => {
+  await Git.checkoutBranch(stagingBranch)
   await Git.rebaseOntoBranch(masterBranch)
   await Git.pushWithTags(stagingBranch)
 }
