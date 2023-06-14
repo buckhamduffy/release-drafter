@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.3.3 - 2023-06-14
+#### Bug Fixes
+- add some logging - (fa355eb) - Aaron Florey
+
+- - -
+
 ## v1.3.2 - 2023-05-19
 #### Bug Fixes
 - ensure git user setup before creating release - (5f7a6dc) - Aaron Florey
