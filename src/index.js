@@ -19,12 +19,16 @@ async function run () {
   await installCog()
 
   if (currentBranch === masterBranch) {
+    core.info('Current branch is master [' + currentBranch + ']')
+
     switch (action) {
       case 'rebase':
+        core.info('Rebasing staging onto master')
         await rebaseStagingOntoMaster()
         break
       case 'release':
       default:
+        core.info('Generating actual release')
         await generateActualRelease()
         break
     }
@@ -33,9 +37,12 @@ async function run () {
   }
 
   if (currentBranch === stagingBranch) {
+    core.info('Current branch is staging [' + currentBranch + ']')
+
     switch (action) {
       case 'release':
       default:
+        core.info('Generating draft release')
         await generateDraftRelease()
         break
     }
