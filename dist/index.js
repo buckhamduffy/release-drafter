@@ -30194,6 +30194,8 @@ async function run () {
     process.exit(1)
   }
 
+  core.debug('context: ' + JSON.stringify(github.context, null, 2))
+
   if (currentBranch === masterBranch) {
     core.info('Current branch is master [' + currentBranch + ']')
 
