@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.3.6 - 2023-08-08
+#### Bug Fixes
+- add context for debugging - (af1a707) - Aaron Florey
+
+- - -
+
 ## v1.3.5 - 2023-08-08
 #### Bug Fixes
 - revert version bumping - (e5f78dd) - Aaron Florey
