@@ -10,13 +10,19 @@ const { installCog, getNextRelease, generateChangelogBetween, bumpRelease, gener
 const { Git } = require('./git')
 const commitlintRead = require('@commitlint/read').default
 
-const currentBranch = github.context.ref?.replace('refs/heads/', '') || 'staging'
+const ref = github.context.ref || process.env.GITHUB_REF || ''
+const currentBranch = ref.replace('refs/heads/', '')
 const masterBranch = core.getInput('master_branch') || 'master'
 const stagingBranch = core.getInput('staging_branch') || 'staging'
 const action = core.getInput('action') || 'release'
 
 async function run () {
   await installCog()
+
+  if (!currentBranch) {
+    core.setFailed('Could not determine current branch')
+    process.exit(1)
+  }
 
   if (currentBranch === masterBranch) {
     core.info('Current branch is master [' + currentBranch + ']')
