@@ -91,7 +91,7 @@ const bumpRelease = async () => {
   try {
     await exec.exec(
       'cog',
-      ['bump', '--version', version]
+      ['bump', '--auto']
     )
   } catch (e) {
     core.setFailed(e.message)
