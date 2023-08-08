@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.3.4 - 2023-08-08
+#### Bug Fixes
+- change how we get current branch - (899cd33) - Aaron Florey
+
+- - -
+
 ## v1.3.3 - 2023-06-14
 #### Bug Fixes
 - add some logging - (fa355eb) - Aaron Florey
