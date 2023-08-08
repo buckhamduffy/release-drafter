@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.3.5 - 2023-08-08
+#### Bug Fixes
+- revert version bumping - (e5f78dd) - Aaron Florey
+
+- - -
+
 ## v1.3.4 - 2023-08-08
 #### Bug Fixes
 - change how we get current branch - (899cd33) - Aaron Florey
