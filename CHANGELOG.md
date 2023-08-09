@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.3.7 - 2023-08-09
+#### Bug Fixes
+- pull ref from workflow_run - (b04dc65) - Aaron Florey
+
+- - -
+
 ## v1.3.6 - 2023-08-08
 #### Bug Fixes
 - add context for debugging - (af1a707) - Aaron Florey
