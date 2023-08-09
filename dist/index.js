@@ -30180,7 +30180,7 @@ const { installCog, getNextRelease, generateChangelogBetween, bumpRelease, gener
 const { Git } = __nccwpck_require__(3892)
 const commitlintRead = (__nccwpck_require__(8439)["default"])
 
-const ref = github.context.ref || process.env.GITHUB_REF || ''
+const ref = github.context.payload?.workflow_run?.head_branch || process.env.GITHUB_REF || github.context.ref || ''
 const currentBranch = ref.replace('refs/heads/', '')
 const masterBranch = core.getInput('master_branch') || 'master'
 const stagingBranch = core.getInput('staging_branch') || 'staging'
