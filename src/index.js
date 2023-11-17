@@ -63,8 +63,8 @@ async function run () {
 }
 
 async function generateDraftRelease () {
-  await Git.ensureBranchFetched(masterBranch)
   await Git.rebaseOntoBranch(masterBranch)
+  await Git.checkoutBranch(stagingBranch)
 
   const latestRelease = await getLatestRelease()
   const nextRelease = await getNextRelease()
