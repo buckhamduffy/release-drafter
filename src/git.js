@@ -27,11 +27,7 @@ class Git {
   }
 
   async ensureBranchFetched (branch) {
-    try {
-      await exec.exec('git', ['fetch', 'origin', branch + ':' + branch])
-    } catch (e) {
-      console.log(e)
-    }
+    await exec.exec('git', ['fetch', '--all'])
   }
 
   async rebaseOntoBranch (branch) {
