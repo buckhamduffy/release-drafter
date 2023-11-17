@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.3.8 - 2023-11-17
+#### Bug Fixes
+- don't fail at fetch - (4c76429) - Aaron Florey
+
+- - -
+
 ## v1.3.7 - 2023-08-09
 #### Bug Fixes
 - pull ref from workflow_run - (b04dc65) - Aaron Florey
