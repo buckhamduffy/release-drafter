@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.3.13 - 2023-11-22
+#### Bug Fixes
+- dont throw rebase error - (d859bd8) - Aaron Florey
+
+- - -
+
 ## v1.3.12 - 2023-11-17
 #### Bug Fixes
 - dont throw rebase error - (fee6861) - Aaron Florey
