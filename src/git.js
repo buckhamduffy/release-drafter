@@ -1,5 +1,6 @@
 const exec = require('@actions/exec')
 const core = require('@actions/core')
+const { c } = require('tar')
 
 class Git {
   isUserSetup = false
@@ -42,10 +43,20 @@ class Git {
     await exec.exec('git', ['rebase', '-Xtheirs', 'origin/' + branch])
   }
 
-  async checkoutBranch (stagingBranch) {
+  async checkoutBranch (branch) {
     await this.setupGitUser()
 
-    await exec.exec('git', ['checkout', '-b', stagingBranch, 'origin/' + stagingBranch])
+    try {
+      await exec.exec('git', ['checkout', '-b', branch, 'origin/' + branch])
+    } catch (e) {
+      console.log(e)
+    }
+
+    try {
+      await exec.exec('git', ['checkout', branch])
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 

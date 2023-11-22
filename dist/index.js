@@ -29911,6 +29911,7 @@ exports.generateChangelogAt = generateChangelogAt
 
 const exec = __nccwpck_require__(1514)
 const core = __nccwpck_require__(2186)
+const { c } = __nccwpck_require__(4674)
 
 class Git {
   isUserSetup = false
@@ -29953,10 +29954,20 @@ class Git {
     await exec.exec('git', ['rebase', '-Xtheirs', 'origin/' + branch])
   }
 
-  async checkoutBranch (stagingBranch) {
+  async checkoutBranch (branch) {
     await this.setupGitUser()
 
-    await exec.exec('git', ['checkout', '-b', stagingBranch, 'origin/' + stagingBranch])
+    try {
+      await exec.exec('git', ['checkout', '-b', branch, 'origin/' + branch])
+    } catch (e) {
+      console.log(e)
+    }
+
+    try {
+      await exec.exec('git', ['checkout', branch])
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 
