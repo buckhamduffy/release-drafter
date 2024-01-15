@@ -29816,6 +29816,18 @@ const installCog = async () => {
   core.addPath(binDir)
 }
 
+const checkIfReleaseExists = async (nextVersion) => {
+  try {
+    await exec.exec('git', ['fetch', '--tags', 'origin']);
+    const checkTag = await exec.getExecOutput('git', ['tag', '-l', nextVersion]);
+
+    return checkTag.stdout.trim() === nextVersion;
+  } catch (e) {
+    core.setFailed(e.message);
+    process.exit(1);
+  }
+}
+
 const getNextRelease = async () => {
   let release = ''
 
@@ -29882,19 +29894,22 @@ const generateChangelogAt = async (version) => {
 }
 
 const bumpRelease = async () => {
-  const version = getNextRelease()
+  const nextVersion = await getNextRelease();
 
-  try {
-    await exec.exec(
-      'cog',
-      ['bump', '--auto']
-    )
-  } catch (e) {
-    core.setFailed(e.message)
-    process.exit(1)
+  const releaseExists = await checkIfReleaseExists(nextVersion);
+  if (releaseExists) {
+    core.info(`Release ${nextVersion} already exists, skipping version bump.`);
+    return nextVersion;
   }
 
-  return version
+  try {
+    await exec.exec('cog', ['bump', '--auto']);
+  } catch (e) {
+    core.setFailed(e.message);
+    process.exit(1);
+  }
+
+  return nextVersion;
 }
 
 exports.installCog = installCog
