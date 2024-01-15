@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.3.14 - 2024-01-15
+#### Bug Fixes
+- update cog script to handle a failed release - (8d894c5) - Nick Buckham
+#### Chore
+- release - (40f4cac) - Aaron Florey
+
+- - -
+
 ## v1.3.13 - 2023-11-22
 #### Bug Fixes
 - dont throw rebase error - (d859bd8) - Aaron Florey
