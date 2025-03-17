@@ -15,9 +15,9 @@ const installCog = async () => {
             binDir
     )
 
-    if (fs.existsSync(path.join(binDir, 'x86_64-unknown-linux-musl'))) {
+    if (fs.existsSync(path.join(binDir, 'x86_64-unknown-linux-musl', 'cog'))) {
       fs.renameSync(
-        path.join(binDir, 'x86_64-unknown-linux-musl'),
+        path.join(binDir, 'x86_64-unknown-linux-musl', 'cog'),
         path.join(binDir, 'cog')
       )
     }
