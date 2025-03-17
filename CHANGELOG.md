@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.6.0 - 2025-03-17
+#### Features
+- fix cog install - (5821ef6) - Aaron Florey
+
+- - -
+
 ## v1.5.0 - 2025-03-17
 #### Features
 - fix cog install - (164ac98) - Aaron Florey
