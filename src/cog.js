@@ -1,5 +1,7 @@
 const exec = require('@actions/exec')
 const core = require('@actions/core')
+const fs = require('fs')
+const path = require('path')
 const { downloadAndExtract } = require('./installer')
 
 const version = '6.2.0'
@@ -12,6 +14,13 @@ const installCog = async () => {
             `https://github.com/cocogitto/cocogitto/releases/download/${version}/${tar}`,
             binDir
     )
+
+    if (fs.existsSync(path.join(binDir, 'x86_64-unknown-linux-musl'))) {
+      fs.renameSync(
+        path.join(binDir, 'x86_64-unknown-linux-musl'),
+        path.join(binDir, 'cog')
+      )
+    }
   } catch (e) {
     core.setFailed(e.message)
     process.exit(1)
@@ -22,13 +31,13 @@ const installCog = async () => {
 
 const checkIfReleaseExists = async (nextVersion) => {
   try {
-    await exec.exec('git', ['fetch', '--tags', 'origin']);
-    const checkTag = await exec.getExecOutput('git', ['tag', '-l', nextVersion]);
+    await exec.exec('git', ['fetch', '--tags', 'origin'])
+    const checkTag = await exec.getExecOutput('git', ['tag', '-l', nextVersion])
 
-    return checkTag.stdout.trim() === nextVersion;
+    return checkTag.stdout.trim() === nextVersion
   } catch (e) {
-    core.setFailed(e.message);
-    process.exit(1);
+    core.setFailed(e.message)
+    process.exit(1)
   }
 }
 
@@ -98,22 +107,22 @@ const generateChangelogAt = async (version) => {
 }
 
 const bumpRelease = async () => {
-  const nextVersion = await getNextRelease();
+  const nextVersion = await getNextRelease()
 
-  const releaseExists = await checkIfReleaseExists(nextVersion);
+  const releaseExists = await checkIfReleaseExists(nextVersion)
   if (releaseExists) {
-    core.info(`Release ${nextVersion} already exists, skipping version bump.`);
-    return nextVersion;
+    core.info(`Release ${nextVersion} already exists, skipping version bump.`)
+    return nextVersion
   }
 
   try {
-    await exec.exec('cog', ['bump', '--auto']);
+    await exec.exec('cog', ['bump', '--auto'])
   } catch (e) {
-    core.setFailed(e.message);
-    process.exit(1);
+    core.setFailed(e.message)
+    process.exit(1)
   }
 
-  return nextVersion;
+  return nextVersion
 }
 
 exports.installCog = installCog

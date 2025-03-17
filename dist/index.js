@@ -29796,6 +29796,8 @@ exports.createActualRelease = createActualRelease
 
 const exec = __nccwpck_require__(1514)
 const core = __nccwpck_require__(2186)
+const fs = __nccwpck_require__(7147)
+const path = __nccwpck_require__(1017)
 const { downloadAndExtract } = __nccwpck_require__(5911)
 
 const version = '6.2.0'
@@ -29808,6 +29810,13 @@ const installCog = async () => {
             `https://github.com/cocogitto/cocogitto/releases/download/${version}/${tar}`,
             binDir
     )
+
+    if (fs.existsSync(path.join(binDir, 'x86_64-unknown-linux-musl'))) {
+      fs.renameSync(
+        path.join(binDir, 'x86_64-unknown-linux-musl'),
+        path.join(binDir, 'cog')
+      )
+    }
   } catch (e) {
     core.setFailed(e.message)
     process.exit(1)
@@ -29818,13 +29827,13 @@ const installCog = async () => {
 
 const checkIfReleaseExists = async (nextVersion) => {
   try {
-    await exec.exec('git', ['fetch', '--tags', 'origin']);
-    const checkTag = await exec.getExecOutput('git', ['tag', '-l', nextVersion]);
+    await exec.exec('git', ['fetch', '--tags', 'origin'])
+    const checkTag = await exec.getExecOutput('git', ['tag', '-l', nextVersion])
 
-    return checkTag.stdout.trim() === nextVersion;
+    return checkTag.stdout.trim() === nextVersion
   } catch (e) {
-    core.setFailed(e.message);
-    process.exit(1);
+    core.setFailed(e.message)
+    process.exit(1)
   }
 }
 
@@ -29894,22 +29903,22 @@ const generateChangelogAt = async (version) => {
 }
 
 const bumpRelease = async () => {
-  const nextVersion = await getNextRelease();
+  const nextVersion = await getNextRelease()
 
-  const releaseExists = await checkIfReleaseExists(nextVersion);
+  const releaseExists = await checkIfReleaseExists(nextVersion)
   if (releaseExists) {
-    core.info(`Release ${nextVersion} already exists, skipping version bump.`);
-    return nextVersion;
+    core.info(`Release ${nextVersion} already exists, skipping version bump.`)
+    return nextVersion
   }
 
   try {
-    await exec.exec('cog', ['bump', '--auto']);
+    await exec.exec('cog', ['bump', '--auto'])
   } catch (e) {
-    core.setFailed(e.message);
-    process.exit(1);
+    core.setFailed(e.message)
+    process.exit(1)
   }
 
-  return nextVersion;
+  return nextVersion
 }
 
 exports.installCog = installCog
@@ -30004,12 +30013,14 @@ exports.downloadAndExtract = async (url, targetDir) => {
     fs.mkdirSync(targetDir, { recursive: true })
   }
 
+  const outputFile = path.join(targetDir, 'file.tar.gz')
+
   core.debug('Downloading cog')
-  await downloadFile(url, path.join(targetDir, 'file.tar.gz'))
+  await downloadFile(url, outputFile)
 
   core.debug('Extracting cog')
   await extractFile(
-    path.join(targetDir, 'file.tar.gz'),
+    outputFile,
     targetDir
   )
 }

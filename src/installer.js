@@ -8,12 +8,14 @@ exports.downloadAndExtract = async (url, targetDir) => {
     fs.mkdirSync(targetDir, { recursive: true })
   }
 
+  const outputFile = path.join(targetDir, 'file.tar.gz')
+
   core.debug('Downloading cog')
-  await downloadFile(url, path.join(targetDir, 'file.tar.gz'))
+  await downloadFile(url, outputFile)
 
   core.debug('Extracting cog')
   await extractFile(
-    path.join(targetDir, 'file.tar.gz'),
+    outputFile,
     targetDir
   )
 }
