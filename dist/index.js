@@ -29798,7 +29798,7 @@ const exec = __nccwpck_require__(1514)
 const core = __nccwpck_require__(2186)
 const { downloadAndExtract } = __nccwpck_require__(5911)
 
-const version = '5.3.1'
+const version = '6.2.0'
 const tar = `cocogitto-${version}-x86_64-unknown-linux-musl.tar.gz`
 const binDir = `${process.env.HOME}/.local/bin`
 

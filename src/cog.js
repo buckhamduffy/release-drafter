@@ -2,7 +2,7 @@ const exec = require('@actions/exec')
 const core = require('@actions/core')
 const { downloadAndExtract } = require('./installer')
 
-const version = '5.3.1'
+const version = '6.2.0'
 const tar = `cocogitto-${version}-x86_64-unknown-linux-musl.tar.gz`
 const binDir = `${process.env.HOME}/.local/bin`
 
