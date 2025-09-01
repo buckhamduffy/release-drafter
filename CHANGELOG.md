@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.6.1 - 2025-09-01
+#### Bug Fixes
+- allow rebase failures - (d63f508) - Aaron Florey
+#### Chore
+- update .editorconfig - (c3090fc) - BuckhamBot
+
+- - -
+
 ## v1.6.0 - 2025-03-17
 #### Features
 - fix cog install - (5821ef6) - Aaron Florey
