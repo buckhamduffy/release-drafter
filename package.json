@@ -22,21 +22,21 @@
   },
   "homepage": "https://github.com/buckhamduffy/release-drafter#readme",
   "dependencies": {
-    "@actions/core": "^1.10.0",
+    "@actions/core": "^1.11.1",
     "@actions/exec": "^1.1.1",
     "@actions/github": "^5.1.1",
-    "@actions/http-client": "^2.1.0",
-    "@commitlint/read": "^17.5.1",
+    "@actions/http-client": "^2.2.3",
+    "@commitlint/read": "^17.8.1",
     "git-raw-commits": "^2.0.11",
-    "node-fetch": "^3.3.1",
-    "tar": "^6.1.14"
+    "node-fetch": "^3.3.2",
+    "tar": "^6.2.1"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.36.1",
-    "eslint": "^8.40.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.27.5",
+    "eslint": "^8.57.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-n": "^15.7.0",
-    "eslint-plugin-promise": "^6.1.1"
+    "eslint-plugin-promise": "^6.6.0"
   }
 }

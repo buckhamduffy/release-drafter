@@ -40,7 +40,18 @@ class Git {
     await this.setupGitUser()
     await this.ensureBranchFetched(branch)
 
-    await exec.exec('git', ['rebase', '-Xtheirs', 'origin/' + branch])
+    try {
+      await exec.exec('git', ['rebase', '-Xtheirs', 'origin/' + branch])
+    } catch (e) {
+      core.debug(e)
+      core.info('Rebase failed, attempting to continue')
+
+      try {
+        await exec.exec('git', ['rebase', '--abort'])
+      } catch (e) {
+        core.info('No rebase to abort')
+      }
+    }
   }
 
   async checkoutBranch (branch) {

@@ -4831,7 +4831,7 @@ __webpack_require__.d(__webpack_exports__, {
 // EXTERNAL MODULE: external "node:http"
 var external_node_http_ = __webpack_require__(8849);
 // EXTERNAL MODULE: external "node:https"
-var external_node_https_ = __webpack_require__(2286);
+var external_node_https_ = __webpack_require__(5200);
 // EXTERNAL MODULE: external "node:zlib"
 var external_node_zlib_ = __webpack_require__(5628);
 // EXTERNAL MODULE: external "node:stream"
@@ -6521,10 +6521,6 @@ const getNodeRequestOptions = request => {
 	let {agent} = request;
 	if (typeof agent === 'function') {
 		agent = agent(parsedURL);
-	}
-
-	if (!headers.has('Connection') && !agent) {
-		headers.set('Connection', 'close');
 	}
 
 	// HTTP-network fetch step 4.2
