@@ -1,7 +1,10 @@
 ignore_merge_commits = true
 branch_whitelist = ["master", "main"]
 pre_bump_hooks = []
-post_bump_hooks = []
+post_bump_hooks = [
+	"npm run prepare",
+	"git add dist/"
+]
 tag_prefix = "v"
 
 [commit_types]

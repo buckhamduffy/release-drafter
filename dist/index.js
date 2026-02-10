@@ -53293,8 +53293,8 @@ const binDir = `${process.env.HOME}/.local/bin`
 const installCog = async () => {
   try {
     await downloadAndExtract(
-            `https://github.com/cocogitto/cocogitto/releases/download/${version}/${tar}`,
-            binDir
+			`https://github.com/cocogitto/cocogitto/releases/download/${version}/${tar}`,
+			binDir
     )
 
     if (fs.existsSync(path.join(binDir, 'x86_64-unknown-linux-musl', 'cog'))) {
@@ -53323,7 +53323,11 @@ const checkIfReleaseExists = async (nextVersion) => {
   }
 }
 
-const getNextRelease = async () => {
+/**
+ * @param {boolean} throwErrors
+ * @returns {Promise<string>}
+ */
+const getNextRelease = async (throwErrors = false) => {
   let release = ''
 
   try {
@@ -53334,10 +53338,14 @@ const getNextRelease = async () => {
 
     release = result.stdout.trim()
 
-    if (!/^v(\d+\.\d+\.\d+)$/.test(release)) {
+    if (!/^v?(\d+\.\d+\.\d+)$/.test(release)) {
       throw new Error('Invalid release version: ' + release)
     }
   } catch (e) {
+    if (throwErrors) {
+      throw e
+    }
+
     core.setFailed(e.message)
     process.exit(1)
   }
@@ -53776,7 +53784,9 @@ async function generateDraftRelease () {
   await Git.rebaseOntoBranch(masterBranch)
 
   const latestRelease = await getLatestRelease()
-  const nextRelease = await getNextRelease()
+  try {
+	  const nextRelease = await getNextRelease()
+  } catch (err) {}
 
   core.setOutput('version', nextRelease)
   core.debug('Next release: ' + nextRelease)
