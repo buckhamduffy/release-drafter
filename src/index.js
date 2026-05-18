@@ -6,7 +6,14 @@ const {
   updateDraftReleaseToActualRelease,
   createActualRelease, getLatestRelease
 } = require('./api')
-const { installCog, getNextRelease, generateChangelogBetween, bumpRelease, generateChangelogAt } = require('./cog')
+const {
+  installCog,
+  getNextRelease,
+  generateChangelogBetween,
+  bumpRelease,
+  generateChangelogAt,
+  getManualNextRelease
+} = require('./cog')
 const { Git } = require('./git')
 const commitlintRead = require('@commitlint/read').default
 
@@ -67,7 +74,13 @@ async function generateDraftRelease () {
   await Git.rebaseOntoBranch(masterBranch)
 
   const latestRelease = await getLatestRelease()
-  const nextRelease = await getNextRelease()
+  let nextRelease
+  try {
+    nextRelease = await getNextRelease(true)
+  } catch (err) {
+    core.error(err.message)
+    nextRelease = await getManualNextRelease()
+  }
 
   core.setOutput('version', nextRelease)
   core.debug('Next release: ' + nextRelease)

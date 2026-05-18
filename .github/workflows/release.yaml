@@ -1,0 +1,38 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: release-${{github.event.workflow_run.head_branch}}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: master
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: buckhamduffy/release-drafter@v1
+        id: version
+        with:
+          master_branch: master
+          staging_branch: staging
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: tag release
+        run: |
+          git tag -f v1 ${{ steps.version.outputs.version }}
+          git push origin v1 --force
