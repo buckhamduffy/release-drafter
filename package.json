@@ -29,7 +29,7 @@
     "@commitlint/read": "17.8.1",
     "git-raw-commits": "2.0.11",
     "node-fetch": "3.3.2",
-    "tar": "6.2.1"
+    "tar": "7.5.15"
   },
   "devDependencies": {
     "@vercel/ncc": "0.36.1",
