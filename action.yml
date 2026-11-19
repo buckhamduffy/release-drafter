@@ -1,7 +1,7 @@
 name: 'Release Drafter'
 description: 'Drafts a Release'
 runs:
-  using: 'node16'
+  using: 'node24'
   main: 'dist/index.js'
 inputs:
   master_branch:

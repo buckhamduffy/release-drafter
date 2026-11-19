@@ -1,14 +1,18 @@
-const github = require('@actions/github')
-const core = require('@actions/core')
-const {
+import { createRequire } from 'module'
+import * as github from '@actions/github'
+import * as core from '@actions/core'
+import {
   getOrCreateDraftRelease,
   findDraftRelease,
   updateDraftReleaseToActualRelease,
   createActualRelease, getLatestRelease
-} = require('./api')
-const { installCog, getNextRelease, generateChangelogBetween, bumpRelease, generateChangelogAt } = require('./cog')
-const { Git } = require('./git')
-const commitlintRead = require('@commitlint/read').default
+} from './api.js'
+import { installCog, getNextRelease, generateChangelogBetween, bumpRelease, generateChangelogAt } from './cog.js'
+import { Git } from './git.js'
+import commitlintRead from '@commitlint/read'
+
+// ncc's ESM output leaves some external builtins using bare require.
+globalThis.require = createRequire(import.meta.url)
 
 const ref = github.context.payload?.workflow_run?.head_branch || process.env.GITHUB_REF || github.context.ref || ''
 const currentBranch = ref.replace('refs/heads/', '')

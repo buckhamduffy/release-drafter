@@ -1,5 +1,5 @@
-const github = require('@actions/github')
-const core = require('@actions/core')
+import * as github from '@actions/github'
+import * as core from '@actions/core'
 
 const getLatestRelease = async () => {
   const octokit = getOctokit()
@@ -118,10 +118,12 @@ const getOctokit = () => {
   return github.getOctokit(token)
 }
 
-exports.getLatestRelease = getLatestRelease
-exports.getOrCreateDraftRelease = getOrCreateDraftRelease
-exports.findDraftRelease = findDraftRelease
-exports.createDraftRelease = createDraftRelease
-exports.updateDraftRelease = updateDraftRelease
-exports.updateDraftReleaseToActualRelease = updateDraftReleaseToActualRelease
-exports.createActualRelease = createActualRelease
+export {
+  getLatestRelease,
+  getOrCreateDraftRelease,
+  findDraftRelease,
+  createDraftRelease,
+  updateDraftRelease,
+  updateDraftReleaseToActualRelease,
+  createActualRelease
+}

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "lint": "eslint src/",
     "prepare": "ncc build src/index.js -o dist --source-map --license licenses.txt",
@@ -22,21 +22,18 @@
   },
   "homepage": "https://github.com/buckhamduffy/release-drafter#readme",
   "dependencies": {
-    "@actions/core": "1.11.1",
-    "@actions/exec": "1.1.1",
-    "@actions/github": "5.1.1",
-    "@actions/http-client": "2.2.3",
-    "@commitlint/read": "17.8.1",
-    "git-raw-commits": "2.0.11",
+    "@actions/core": "3.0.1",
+    "@actions/exec": "3.0.0",
+    "@actions/github": "9.1.1",
+    "@actions/http-client": "4.0.1",
+    "@commitlint/read": "21.2.3",
+    "git-raw-commits": "5.0.1",
     "node-fetch": "3.3.2",
-    "tar": "6.2.1"
+    "tar": "7.5.23"
   },
   "devDependencies": {
-    "@vercel/ncc": "0.36.1",
-    "eslint": "8.57.1",
-    "eslint-config-standard": "17.1.0",
-    "eslint-plugin-import": "2.32.0",
-    "eslint-plugin-n": "15.7.0",
-    "eslint-plugin-promise": "6.6.0"
+    "@vercel/ncc": "0.45.0",
+    "eslint": "10.15.0",
+    "neostandard": "0.14.1"
   }
 }

@@ -1,8 +1,7 @@
-const exec = require('@actions/exec')
-const core = require('@actions/core')
-const { c } = require('tar')
+import * as exec from '@actions/exec'
+import * as core from '@actions/core'
 
-class Git {
+class GitClient {
   isUserSetup = false
 
   async setupGitUser () {
@@ -71,4 +70,4 @@ class Git {
   }
 }
 
-exports.Git = new Git()
+export const Git = new GitClient()

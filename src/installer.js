@@ -1,9 +1,9 @@
-const fs = require('fs')
-const path = require('path')
-const tar = require('tar')
-const core = require('@actions/core')
+import fs from 'fs'
+import path from 'path'
+import { x } from 'tar'
+import * as core from '@actions/core'
 
-exports.downloadAndExtract = async (url, targetDir) => {
+export const downloadAndExtract = async (url, targetDir) => {
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true })
   }
@@ -21,7 +21,7 @@ exports.downloadAndExtract = async (url, targetDir) => {
 }
 
 const extractFile = async (inputPath, targetDir) => {
-  await tar.x({
+  await x({
     file: inputPath,
     cwd: targetDir
   })
@@ -35,7 +35,7 @@ const downloadFile = async (url, outputPath) => {
   const fetch = (await import('node-fetch')).default
 
   const body = await fetch(url)
-    .then((x) => x.buffer())
+    .then((x) => x.arrayBuffer())
     .catch((err) => {
       core.setFailed(`Fail to download file ${url}: ${err}`)
       return undefined
@@ -43,5 +43,5 @@ const downloadFile = async (url, outputPath) => {
 
   if (body === undefined) return
 
-  await fs.writeFileSync(outputPath, body)
+  fs.writeFileSync(outputPath, Buffer.from(body))
 }

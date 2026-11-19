@@ -1,8 +1,8 @@
-const exec = require('@actions/exec')
-const core = require('@actions/core')
-const fs = require('fs')
-const path = require('path')
-const { downloadAndExtract } = require('./installer')
+import * as exec from '@actions/exec'
+import * as core from '@actions/core'
+import fs from 'fs'
+import path from 'path'
+import { downloadAndExtract } from './installer.js'
 
 const version = '6.2.0'
 const tar = `cocogitto-${version}-x86_64-unknown-linux-musl.tar.gz`
@@ -11,8 +11,8 @@ const binDir = `${process.env.HOME}/.local/bin`
 const installCog = async () => {
   try {
     await downloadAndExtract(
-            `https://github.com/cocogitto/cocogitto/releases/download/${version}/${tar}`,
-            binDir
+      `https://github.com/cocogitto/cocogitto/releases/download/${version}/${tar}`,
+      binDir
     )
 
     if (fs.existsSync(path.join(binDir, 'x86_64-unknown-linux-musl', 'cog'))) {
@@ -125,8 +125,10 @@ const bumpRelease = async () => {
   return nextVersion
 }
 
-exports.installCog = installCog
-exports.getNextRelease = getNextRelease
-exports.generateChangelogBetween = generateChangelogBetween
-exports.bumpRelease = bumpRelease
-exports.generateChangelogAt = generateChangelogAt
+export {
+  installCog,
+  getNextRelease,
+  generateChangelogBetween,
+  bumpRelease,
+  generateChangelogAt
+}
