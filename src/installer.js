@@ -34,14 +34,18 @@ const downloadFile = async (url, outputPath) => {
 
   const fetch = (await import('node-fetch')).default
 
-  const body = await fetch(url)
-    .then((x) => x.arrayBuffer())
-    .catch((err) => {
-      core.setFailed(`Fail to download file ${url}: ${err}`)
-      return undefined
-    })
+  let res
+  try {
+    res = await fetch(url)
+  } catch (err) {
+    throw new Error(`Fail to download file ${url}: ${err}`)
+  }
 
-  if (body === undefined) return
+  if (!res.ok) {
+    throw new Error(`Fail to download file ${url}: HTTP ${res.status} ${res.statusText}`)
+  }
+
+  const body = await res.arrayBuffer()
 
   fs.writeFileSync(outputPath, Buffer.from(body))
 }

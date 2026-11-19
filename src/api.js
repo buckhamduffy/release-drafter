@@ -9,8 +9,7 @@ const getLatestRelease = async () => {
   const [owner, repo] = (process.env.GITHUB_REPOSITORY || '').split('/')
 
   if (!owner || !repo) {
-    core.setFailed('Unable to get the owner and repo from GITHUB_REPOSITORY environment variable')
-    return
+    throw new Error('Unable to get the owner and repo from GITHUB_REPOSITORY environment variable')
   }
 
   const res = await octokit.rest.repos.getLatestRelease({
@@ -25,12 +24,12 @@ const getOrCreateDraftRelease = async (releaseName, changelog) => {
   const draftRelease = await findDraftRelease()
 
   if (draftRelease) {
-    updateDraftRelease(draftRelease, releaseName, changelog)
+    await updateDraftRelease(draftRelease, releaseName, changelog)
 
     return
   }
 
-  createDraftRelease(releaseName, changelog)
+  await createDraftRelease(releaseName, changelog)
 }
 
 const updateDraftRelease = async (draftRelease, releaseName, changelog) => {

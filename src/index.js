@@ -1,4 +1,3 @@
-import { createRequire } from 'module'
 import * as github from '@actions/github'
 import * as core from '@actions/core'
 import {
@@ -10,9 +9,6 @@ import {
 import { installCog, getNextRelease, generateChangelogBetween, bumpRelease, generateChangelogAt } from './cog.js'
 import { Git } from './git.js'
 import commitlintRead from '@commitlint/read'
-
-// ncc's ESM output leaves some external builtins using bare require.
-globalThis.require = createRequire(import.meta.url)
 
 const ref = github.context.payload?.workflow_run?.head_branch || process.env.GITHUB_REF || github.context.ref || ''
 const currentBranch = ref.replace('refs/heads/', '')
@@ -83,13 +79,26 @@ async function generateDraftRelease () {
   await getOrCreateDraftRelease(nextRelease, changelog)
 }
 
+async function isStagingMergeCommit () {
+  let history
+  try {
+    history = await commitlintRead({ last: true })
+  } catch (e) {
+    core.warning(`Could not read the last commit, treating it as not a staging merge: ${e.message}`)
+    return false
+  }
+
+  const branch = stagingBranch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const prRe = new RegExp('Merge pull request #\\d+ from [\\w.-]+\\/' + branch)
+  const mergeRe = new RegExp('Merge branch \'' + branch + '\'')
+
+  return prRe.test(history[0]) || mergeRe.test(history[0])
+}
+
 async function generateActualRelease () {
   await Git.setupGitUser()
 
-  const history = await commitlintRead({ from: 'HEAD~1', to: 'HEAD' })
-  const prRe = new RegExp('Merge pull request #\\d+ from \\w+\\/' + stagingBranch)
-  const mergeRe = new RegExp('Merge branch \'' + stagingBranch + '\'')
-  const isStagingMerge = prRe.test(history[0]) || mergeRe.test(history[0])
+  const isStagingMerge = await isStagingMergeCommit()
 
   const version = await bumpRelease()
   await Git.pushWithTags(masterBranch)
@@ -115,4 +124,4 @@ const rebaseStagingOntoMaster = async () => {
   await Git.pushWithTags(stagingBranch)
 }
 
-run()
+run().catch((e) => core.setFailed(e.message))

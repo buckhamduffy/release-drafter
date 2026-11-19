@@ -29648,8 +29648,6 @@ module.exports = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("worker_threa
 /************************************************************************/
 var __webpack_exports__ = {};
 
-;// CONCATENATED MODULE: external "module"
-const external_module_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("module");
 ;// CONCATENATED MODULE: external "fs"
 const external_fs_namespaceObject = __WEBPACK_EXTERNAL_createRequire(import.meta.url)("fs");
 ;// CONCATENATED MODULE: external "os"
@@ -37491,7 +37489,7 @@ function error(message, properties = {}) {
  * @param properties optional properties to add to the annotation.
  */
 function warning(message, properties = {}) {
-    issueCommand('warning', toCommandProperties(properties), message instanceof Error ? message.toString() : message);
+    command_issueCommand('warning', utils_toCommandProperties(properties), message instanceof Error ? message.toString() : message);
 }
 /**
  * Adds a notice issue
@@ -37605,8 +37603,7 @@ const getLatestRelease = async () => {
   const [owner, repo] = (process.env.GITHUB_REPOSITORY || '').split('/')
 
   if (!owner || !repo) {
-    setFailed('Unable to get the owner and repo from GITHUB_REPOSITORY environment variable')
-    return
+    throw new Error('Unable to get the owner and repo from GITHUB_REPOSITORY environment variable')
   }
 
   const res = await octokit.rest.repos.getLatestRelease({
@@ -37621,12 +37618,12 @@ const getOrCreateDraftRelease = async (releaseName, changelog) => {
   const draftRelease = await findDraftRelease()
 
   if (draftRelease) {
-    updateDraftRelease(draftRelease, releaseName, changelog)
+    await updateDraftRelease(draftRelease, releaseName, changelog)
 
     return
   }
 
-  createDraftRelease(releaseName, changelog)
+  await createDraftRelease(releaseName, changelog)
 }
 
 const updateDraftRelease = async (draftRelease, releaseName, changelog) => {
@@ -37780,14 +37777,18 @@ const downloadFile = async (url, outputPath) => {
 
   const fetch = (await __nccwpck_require__.e(/* import() */ 816).then(__nccwpck_require__.bind(__nccwpck_require__, 816))).default
 
-  const body = await fetch(url)
-    .then((x) => x.arrayBuffer())
-    .catch((err) => {
-      setFailed(`Fail to download file ${url}: ${err}`)
-      return undefined
-    })
+  let res
+  try {
+    res = await fetch(url)
+  } catch (err) {
+    throw new Error(`Fail to download file ${url}: ${err}`)
+  }
 
-  if (body === undefined) return
+  if (!res.ok) {
+    throw new Error(`Fail to download file ${url}: HTTP ${res.status} ${res.statusText}`)
+  }
+
+  const body = await res.arrayBuffer()
 
   external_fs_namespaceObject.writeFileSync(outputPath, Buffer.from(body))
 }
@@ -39234,10 +39235,6 @@ async function getCommitMessages(settings) {
 
 
 
-
-// ncc's ESM output leaves some external builtins using bare require.
-globalThis.require = (0,external_module_namespaceObject.createRequire)(import.meta.url)
-
 const ref = github_context.payload?.workflow_run?.head_branch || process.env.GITHUB_REF || github_context.ref || ''
 const currentBranch = ref.replace('refs/heads/', '')
 const masterBranch = getInput('master_branch') || 'master'
@@ -39307,13 +39304,26 @@ async function generateDraftRelease () {
   await getOrCreateDraftRelease(nextRelease, changelog)
 }
 
+async function isStagingMergeCommit () {
+  let history
+  try {
+    history = await getCommitMessages({ last: true })
+  } catch (e) {
+    warning(`Could not read the last commit, treating it as not a staging merge: ${e.message}`)
+    return false
+  }
+
+  const branch = stagingBranch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const prRe = new RegExp('Merge pull request #\\d+ from [\\w.-]+\\/' + branch)
+  const mergeRe = new RegExp('Merge branch \'' + branch + '\'')
+
+  return prRe.test(history[0]) || mergeRe.test(history[0])
+}
+
 async function generateActualRelease () {
   await Git.setupGitUser()
 
-  const history = await getCommitMessages({ from: 'HEAD~1', to: 'HEAD' })
-  const prRe = new RegExp('Merge pull request #\\d+ from \\w+\\/' + stagingBranch)
-  const mergeRe = new RegExp('Merge branch \'' + stagingBranch + '\'')
-  const isStagingMerge = prRe.test(history[0]) || mergeRe.test(history[0])
+  const isStagingMerge = await isStagingMergeCommit()
 
   const version = await bumpRelease()
   await Git.pushWithTags(masterBranch)
@@ -39339,7 +39349,7 @@ const rebaseStagingOntoMaster = async () => {
   await Git.pushWithTags(stagingBranch)
 }
 
-run()
+run().catch((e) => setFailed(e.message))
 
 
 //# sourceMappingURL=index.js.map
