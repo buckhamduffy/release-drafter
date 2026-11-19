@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.6.2 - 2026-11-19
+#### Bug Fixes
+- (**deps**) pin dependencies - (d8d7617) - Buckham Duffy Bot
+- strengthen potential failures - (926f613) - Aaron Florey
+- update dependencies - (9269117) - Aaron Florey
+
+- - -
+
 ## v1.6.1 - 2025-09-01
 #### Bug Fixes
 - allow rebase failures - (d63f508) - Aaron Florey
